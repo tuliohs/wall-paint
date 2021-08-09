@@ -2,11 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Cubo from './src/components/Cubo';
+import HorizontallScroll from './src/components/HorizontalScroll';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Cubo />
+    <View >
+      {/*<Cubo />*/}
+      <HorizontallScroll />
       <StatusBar style="auto" />
     </View>
   );
