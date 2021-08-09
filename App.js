@@ -7,8 +7,8 @@ import HorizontallScroll from './src/components/HorizontalScroll';
 export default function App() {
   return (
     <View >
-      {/*<Cubo />*/}
-      <HorizontallScroll />
+      <Cubo />
+      {/*<HorizontallScroll />*/}
       <StatusBar style="auto" />
     </View>
   );
