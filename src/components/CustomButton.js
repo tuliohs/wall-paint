@@ -7,19 +7,24 @@ const { width } = Dimensions.get('window');
 
 export default function CustomButton(props) {
 
-    const { disabled, onPress, bgColor, opacity, children, style, size, round, shadowless, shadowColor, iconSize, onlyIcon,
-        darkColor, ...otherProps } = props
+    const { active, disabled, onPress, bgColor, opacity, children, style, size, round, shadowless, shadowColor, iconSize, onlyIcon,
+        border, darkColor, ...otherProps } = props
 
     const viewStyles = [
-        bgColor ? { backgroundColor: bgColor } : { backgroundColor: colors.sucess },
+        active ? { backgroundColor: colors.white } :
+            bgColor ? { backgroundColor: bgColor } : { backgroundColor: colors.sucess }
 
     ]
 
     const defaultSizeIcon = 0
     const buttonStyles = [
         styles.defaultButton,
-        size === 'large' ? { width: width * 0.9 } : (size === "small" ? { width: width * 0.2 } : { width: width * 0.42 }),
-        round && { borderRadius: sizes.base * 2 },
+        size === 'large' ? { width: width * 0.9 } : (size === "small" ? { width: width * 0.25, height: 38 } : { width: width * 0.42 }),
+        round && { borderRadius: sizes.base * 0.5 },
+        border && {
+            borderWidth: 1,
+            borderColor: colors.disable
+        },
         onlyIcon && {
             width: (iconSize || defaultSizeIcon) * 2.75,
             height: (iconSize || defaultSizeIcon) * 2.75,
@@ -35,7 +40,7 @@ export default function CustomButton(props) {
         <TouchableOpacity
             onPress={onPress}
             style={[
-                { color: 'white' },
+                { padding: 0 },
                 viewStyles, buttonStyles, style]} {...otherProps} >
             {children}
         </TouchableOpacity>

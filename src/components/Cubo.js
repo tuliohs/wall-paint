@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, useEffect } from 'react';
+import React, { Component, PropTypes, useEffect, useState } from 'react';
 import {
     Dimensions,
     PanResponder, Button,
@@ -8,7 +8,7 @@ import CustomButton from './CustomButton'
 import { transformOrigin, rotateXY, rotateXZ } from '../utils';
 
 import Animated, {
-    useAnimatedScrollHandler,
+    useAnimatedScrollHandler, runOnJS,
     useSharedValue, useAnimatedStyle,
     interpolate, useAnimatedRef
 } from 'react-native-reanimated'
@@ -23,6 +23,7 @@ const animationDesvioY = 30
 const styles = {
     container: {
         //position: 'absolute',
+        zIndex: 9999999,
         left: WIDTH / 2 - 50,
         top: HEIGHT / 2 - 300,
         width: 100,
@@ -39,7 +40,7 @@ const styles = {
     }
 };
 
-export default function Cubo() {
+export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect }) {
 
     const refViewFront = useAnimatedRef()
     const refViewBack = useAnimatedRef()
@@ -85,7 +86,7 @@ export default function Cubo() {
         })
     ).current;
 
-    function handlerMoveByDxDy(dx, dy) {
+    function handlerMoveByDxDy(dx, dy, it) {
         console.log(dx, dy)
         const origin = { x: 0, y: 0, z: -50 };
         let matrix = rotateXY(dx, dy);
@@ -111,6 +112,7 @@ export default function Cubo() {
         //matrix = rotateXZ(-dx, dy + 90);
         //transformOrigin(matrix, origin);
         //this.refViewBottom.current. setNativeProps({ style: { transform: [{ perspective: 1000 }, { matrix: matrix }] } });
+        //runOnJS(setItemSelect)(it)
     }
 
     function handlePanResponderMove(e, gestureState) {
@@ -186,20 +188,37 @@ export default function Cubo() {
     //        />
     //    )
     //}
+    useEffect(() => {
+        console.log(refViewFront.current)
 
-    const goToPositionLeft = () => handlerMoveByDxDy(180 + animationDesvioY, 0 + animationDesvioX)
-    const goToPositionRight = () => handlerMoveByDxDy(90 + animationDesvioY, 0 + animationDesvioX)
-    const goToPositionFront = () => handlerMoveByDxDy(-180 + animationDesvioY, 0 + animationDesvioX)
-    const goToPositionBack = () => handlerMoveByDxDy(-90 + animationDesvioY, 0 + animationDesvioX)
+    }, [refViewFront, refViewBack, refViewRight, refViewLeft])
+    const goToPositionLeft = (it) => {
+        handlerMoveByDxDy(180 + animationDesvioY, 0 + animationDesvioX, it)
+        //setItemSelect(it)
+    }
+    const goToPositionRight = (it) => {
+        handlerMoveByDxDy(90 + animationDesvioY, 0 + animationDesvioX, it)
+        //setItemSelect(it)
+    }
+    const goToPositionFront = (it) => {
+        handlerMoveByDxDy(-180 + animationDesvioY, 0 + animationDesvioX, it)
+        //setItemSelect(it)
+    }
+    const goToPositionBack = (it) => {
+        handlerMoveByDxDy(-90 + animationDesvioY, 0 + animationDesvioX, it)
+        //setItemSelect(it)
+    }
 
     const walls = [
-        { id: 1, title: "Left", onPress: goToPositionLeft },
-        { id: 2, title: "Right", onPress: goToPositionRight },
-        { id: 3, title: "Front", onPress: goToPositionFront },
-        { id: 4, title: "Back", onPress: goToPositionBack },
+        { id: 1, title: "Left", onPress: () => goToPositionLeft("Left") },
+        { id: 2, title: "Right", onPress: () => goToPositionRight("Right") },
+        { id: 3, title: "Front", onPress: () => goToPositionFront("Front") },
+        { id: 4, title: "Back", onPress: () => goToPositionBack("Back") },
     ]
     return (
-        <View>
+        <View style={{
+            position: 'relative',
+        }}>
             <Animated.View style={styles.container}>
                 <RenderFront color='#4c72e0' />
                 <RenderBack color='#8697df' />
@@ -209,28 +228,26 @@ export default function Cubo() {
                 {/*{this.renderBottom('#d1426b')}*/}
             </Animated.View>
             <FlatList
+
                 style={{
                     position: 'absolute',
-                    marginTop: HEIGHT / 2 - 50
+                    marginTop: HEIGHT / 2 - 80
                 }}
                 data={walls} horizontal={true}
                 keyExtractor={(item) => item.title}
                 renderItem={({ item }) => (
                     <View key={item?.title}>
-                        <CustomButton round
+                        <CustomButton round border
+                            active={itemSelect === item?.title}
                             size="small"
-                            bgColor={colors.warning}
-
+                            bgColor={'#1e1e1e'}
                             onPress={item.onPress}>
                             <Text style={{
-                                color: colors.white
+                                color: itemSelect !== item?.title ? colors.white : colors.text
                             }}>{item.title}</Text>
                         </CustomButton>
                     </View>)}
             />
-
-
-
         </View>
     )
 }

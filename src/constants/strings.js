@@ -1,3 +1,10 @@
 export default strings = {
-    "altura": "altura"
+    //Labels
+    "txAltura": "altura",
+    "txLargura": "largura",
+
+    //Place Holder
+    "phAltura": "altura em metros",
+    "phLargura": "largura em metros",
+
 }
