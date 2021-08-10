@@ -11,6 +11,7 @@ import {
 
 import strings from '../constants/strings'
 import { colors } from '../constants/theme'
+import sides from '../constants/config/sides'
 const { height, width } = Dimensions.get('screen');
 
 const DismissKeyboard = ({ children }) => (
@@ -19,45 +20,37 @@ const DismissKeyboard = ({ children }) => (
 
 const Home = () => {
     const [tamanho, setTamanho] = useState({
-        front: {
-            width: 2,
-            height: 2
-        },
-        back: {
-            width: 2,
-            height: 2
-        },
-        left: {
-            width: 2,
-            height: 2
-        },
-        right: {
-            width: 2,
-            height: 2
-        },
+        [sides.front]: { width: 2, height: 2 },
+        [sides.back]: { width: 2, height: 2 },
+        [sides.left]: { width: 2, height: 2 },
+        [sides.right]: { width: 2, height: 2 },
     })
 
-    const [itemSelect, setItemSelect] = useState('front')
+    const [itemSelect, setItemSelect] = useState(sides.front)
     const onChangeHeight = (e) => {
-        if (e > 15 || e < 15)
-            return
-        Alert.alert("Erro", "A parede deve ter entre 1 e 15 Metros")
-        setTamanho({
-            ...tamanho,
-            [itemSelect]: {
-                ...tamanho[itemSelect],
-                height: e
-            }
-        })
+        //if (e > 15 || e < 15) 
+        //Alert.alert("Erro", "A parede deve ter entre 1 e 15 Metros")
+        changeEquivalentSide(e, "height")
     }
     const onChangeWidth = (e) => {
-        setTamanho({
-            ...tamanho,
-            [itemSelect]: {
-                ...tamanho[itemSelect],
-                height: e
-            }
-        })
+        changeEquivalentSide(e, "width")
+
+    }
+    const changeEquivalentSide = (e, type) => {
+        if (itemSelect === sides.front || itemSelect === sides.back) {
+            setTamanho({
+                ...tamanho,
+                [sides.front]: { ...tamanho[sides.front], [type]: e },
+                [sides.back]: { ...tamanho[sides.back], [type]: e }
+            })
+        }
+        else {
+            setTamanho({
+                ...tamanho,
+                [sides.left]: { ...tamanho[sides.left], [type]: e },
+                [sides.right]: { ...tamanho[sides.right], [type]: e }
+            })
+        }
     }
     return (
         <ScrollView
@@ -83,7 +76,7 @@ const Home = () => {
                                     placeholder={strings.phAltura}
                                     onChangeText={e => onChangeHeight(e)}
 
-                                    value={tamanho[itemSelect].height.toString()}
+                                    value={(tamanho[itemSelect]?.height)?.toString()}
                                     //style={styles.inputs} 
                                     style={stylesSheet.input}
                                     bgColor={colors.reverse}
@@ -98,7 +91,7 @@ const Home = () => {
                                 <CustomInput
                                     placeholder={strings.phLargura}
                                     onChangeText={e => onChangeWidth(e)}
-                                    value={tamanho[itemSelect].height.toString()}
+                                    value={(tamanho[itemSelect]?.width)?.toString()}
                                     //style={styles.inputs} 
                                     style={stylesSheet.input}
                                     bgColor={colors.reverse}

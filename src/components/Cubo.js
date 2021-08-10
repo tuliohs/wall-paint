@@ -13,6 +13,7 @@ import Animated, {
     interpolate, useAnimatedRef
 } from 'react-native-reanimated'
 import { colors } from '../constants/theme/index';
+import sides from '../constants/config/sides';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -29,14 +30,6 @@ const styles = {
         width: 100,
         height: 100,
         backgroundColor: "transparent"
-    },
-    rectangle: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: 80,
-        height: 150,
-        zIndex: 10
     }
 };
 
@@ -46,6 +39,8 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     const refViewBack = useAnimatedRef()
     const refViewRight = useAnimatedRef()
     const refViewLeft = useAnimatedRef()
+
+
 
     const panResponder = React.useRef(
         PanResponder.create({
@@ -112,7 +107,7 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
         //matrix = rotateXZ(-dx, dy + 90);
         //transformOrigin(matrix, origin);
         //this.refViewBottom.current. setNativeProps({ style: { transform: [{ perspective: 1000 }, { matrix: matrix }] } });
-        //runOnJS(setItemSelect)(it)
+        runOnJS(setItemSelect)(it)
     }
 
     function handlePanResponderMove(e, gestureState) {
@@ -120,11 +115,30 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
         handlerMoveByDxDy(dx, dy)
     }
 
+    const customStyles = {
+        rectangle_faces: {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: tamanho.front.height * 20 || 80,// 80,
+            height: tamanho.front.width * 20 || 80,
+            zIndex: 10
+        },
+        rectangle_lados: {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: tamanho.left.height * 20 || 80,// 80,
+            height: tamanho.left.width * 20 || 80,
+            zIndex: 10
+        }
+    }
+
     function RenderLeft({ color }) {
         return (
             <Animated.View
                 ref={component => refViewRight.current = component}
-                style={[styles.rectangle, (color) ? { backgroundColor: color } : null]}
+                style={[customStyles.rectangle_lados, (color) ? { backgroundColor: color } : null]}
                 {...panResponder.panHandlers}
             />
         )
@@ -134,7 +148,7 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
         return (
             <Animated.View
                 ref={component => refViewLeft.current = component}
-                style={[styles.rectangle, (color) ? { backgroundColor: color } : null]}
+                style={[customStyles.rectangle_lados, (color) ? { backgroundColor: color } : null]}
                 {...panResponder.panHandlers}
             />
         )
@@ -144,7 +158,7 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
         return (
             <Animated.View
                 ref={component => refViewFront.current = component}
-                style={[styles.rectangle, (color) ? { backgroundColor: color } : null]}
+                style={[customStyles.rectangle_faces, (color) ? { backgroundColor: color } : null]}
                 {...panResponder.panHandlers}
             />
         )
@@ -155,7 +169,7 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
             <>
                 <Animated.View
                     ref={component => refViewBack.current = component}
-                    style={[styles.rectangle, (color) ? { backgroundColor: color } : null]}
+                    style={[customStyles.rectangle_faces, (color) ? { backgroundColor: color } : null]}
                     {...panResponder.panHandlers}
                 >
 
@@ -173,7 +187,7 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     //    return (
     //        <View
     //            ref={component => this.refViewTop.current = component}
-    //            style={[styles.rectangle, (color) ? { backgroundColor: color } : null]}
+    //            style={[customStyles.rectangle, (color) ? { backgroundColor: color } : null]}
     //            {...this.panResponder.panHandlers}
     //        />
     //    )
@@ -183,13 +197,13 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     //    return (
     //        <View
     //            ref={component => this.refViewBottom.current = component}
-    //            style={[styles.rectangle, (color) ? { backgroundColor: color } : null]}
+    //            style={[customStyles.rectangle, (color) ? { backgroundColor: color } : null]}
     //            {...this.panResponder.panHandlers}
     //        />
     //    )
     //}
     useEffect(() => {
-        console.log(refViewFront.current)
+        //console.log(refViewFront.current)
 
     }, [refViewFront, refViewBack, refViewRight, refViewLeft])
     const goToPositionLeft = (it) => {
@@ -210,10 +224,10 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     }
 
     const walls = [
-        { id: 1, title: "Left", onPress: () => goToPositionLeft("Left") },
-        { id: 2, title: "Right", onPress: () => goToPositionRight("Right") },
-        { id: 3, title: "Front", onPress: () => goToPositionFront("Front") },
-        { id: 4, title: "Back", onPress: () => goToPositionBack("Back") },
+        { id: sides.left, title: "Left", onPress: () => goToPositionLeft(sides.left) },
+        { id: sides.front, title: "Front", onPress: () => goToPositionFront(sides.front) },
+        { id: sides.right, title: "Right", onPress: () => goToPositionRight(sides.right) },
+        { id: sides.back, title: "Back", onPress: () => goToPositionBack(sides.back) },
     ]
     return (
         <View style={{
