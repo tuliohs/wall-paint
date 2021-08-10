@@ -39,6 +39,9 @@ export const transformOrigin = (matrix, origin) => {
     const { x, y, z } = origin;
 
     const translate = MatrixMath.createIdentityMatrix();
+
+    //stack reference
+    //https://stackoverflow.com/questions/44707766/how-to-scale-an-object-from-the-top-left-in-react-native-using-matrices
     MatrixMath.reuseTranslate3dCommand(translate, x, y, z);
     MatrixMath.multiplyInto(matrix, translate, matrix);
 

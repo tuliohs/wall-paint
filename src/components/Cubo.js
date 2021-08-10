@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, useEffect, useState } from 'react';
+import React, { Component, PropTypes, useCallback, useEffect, useState } from 'react';
 import {
     Dimensions,
     PanResponder, Button,
@@ -40,8 +40,6 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     const refViewRight = useAnimatedRef()
     const refViewLeft = useAnimatedRef()
 
-
-
     const panResponder = React.useRef(
         PanResponder.create({
             // Ask to be the responder:
@@ -73,15 +71,17 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
             //    // Another component has become the responder, so this gesture
             //    // should be cancelled
             //  },
-            //  onShouldBlockNativeResponder: (evt, gestureState) => {
-            //    // Returns whether this component should block native components from becoming the JS
-            //    // responder. Returns true by default. Is currently only supported on android.
-            //    return true;
-            //  }
+            onShouldBlockNativeResponder: (evt, gestureState) => {
+                // Returns whether this component should block native components from becoming the JS
+                // responder. Returns true by default. Is currently only supported on android.
+                //return true;
+                //showOffset()
+            }
         })
     ).current;
 
     function handlerMoveByDxDy(dx, dy, it) {
+
         console.log(dx, dy)
         const origin = { x: 0, y: 0, z: -50 };
         let matrix = rotateXY(dx, dy);
@@ -107,7 +107,11 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
         //matrix = rotateXZ(-dx, dy + 90);
         //transformOrigin(matrix, origin);
         //this.refViewBottom.current. setNativeProps({ style: { transform: [{ perspective: 1000 }, { matrix: matrix }] } });
-        runOnJS(setItemSelect)(it)
+        //await aab({ it: it })
+        //showOffset(it)
+        //showOffset()
+        //const intervalo = setInterval(() => { setItemSelect(it) }, 50) //Substitui componentDidAmount
+        //return () => clearInterval(intervalo) //Substitui componentWillUnmount    
     }
 
     function handlePanResponderMove(e, gestureState) {
@@ -172,13 +176,7 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
                     style={[customStyles.rectangle_faces, (color) ? { backgroundColor: color } : null]}
                     {...panResponder.panHandlers}
                 >
-
-                    <Button
-                        style={{
-                            zIndex: 99999,
-                            maginTop: -250
-                        }}
-                        title="Back" />
+                    {/*<Button style={{ zIndex: 99999, maginTop: -250 }} title="Back" />*/}
                 </Animated.View>
             </>
         )
@@ -202,25 +200,50 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     //        />
     //    )
     //}
-    useEffect(() => {
-        //console.log(refViewFront.current)
 
-    }, [refViewFront, refViewBack, refViewRight, refViewLeft])
+    const showOffset = () => {
+        console.log('change ofset')
+        refViewFront.current.measure((fx, fy, width, height, px, py) => {
+            if (px < 124) {
+                setItemSelect(sides.back)
+            } else if (px < 137) {
+                setItemSelect(sides.left)
+            } else if (px < 184) {
+                setItemSelect(sides.right)
+            } else {
+                setItemSelect(sides.front)
+            }
+        })
+    }
+
+    //useEffect(() => {
+    //    console.log('showOffsetshowOffset')
+    //    showOffset()
+    //}, [panResponder])
+
     const goToPositionLeft = (it) => {
-        handlerMoveByDxDy(180 + animationDesvioY, 0 + animationDesvioX, it)
-        //setItemSelect(it)
+        setItemSelect(sides.left)
+        setTimeout(() => {
+            handlerMoveByDxDy(180 + animationDesvioY, 0 + animationDesvioX, it)
+        }, 50)
     }
     const goToPositionRight = (it) => {
-        handlerMoveByDxDy(90 + animationDesvioY, 0 + animationDesvioX, it)
-        //setItemSelect(it)
+        setItemSelect(sides.right)
+        setTimeout(() => {
+            handlerMoveByDxDy(0 + animationDesvioY, 0 + animationDesvioX, it)
+        }, 50)
     }
     const goToPositionFront = (it) => {
-        handlerMoveByDxDy(-180 + animationDesvioY, 0 + animationDesvioX, it)
-        //setItemSelect(it)
+        setItemSelect(sides.front)
+        setTimeout(() => {
+            handlerMoveByDxDy(90 + animationDesvioY, 0 + animationDesvioX, it)
+        }, 50)
     }
     const goToPositionBack = (it) => {
-        handlerMoveByDxDy(-90 + animationDesvioY, 0 + animationDesvioX, it)
-        //setItemSelect(it)
+        setItemSelect(sides.back)
+        setTimeout(() => {
+            handlerMoveByDxDy(-90 + animationDesvioY, 0 + animationDesvioX, it)
+        }, 50)
     }
 
     const walls = [
@@ -252,12 +275,12 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
                 renderItem={({ item }) => (
                     <View key={item?.title}>
                         <CustomButton round border
-                            active={itemSelect === item?.title}
+                            active={itemSelect === item?.id}
                             size="small"
                             bgColor={'#1e1e1e'}
                             onPress={item.onPress}>
                             <Text style={{
-                                color: itemSelect !== item?.title ? colors.white : colors.text
+                                color: itemSelect !== item?.id ? colors.white : colors.text
                             }}>{item.title}</Text>
                         </CustomButton>
                     </View>)}
