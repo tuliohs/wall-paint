@@ -5,7 +5,7 @@ import { colors } from '../constants/theme'
 
 const { width } = Dimensions.get('window');
 
-export default function Button(props) {
+export default function CustomButton(props) {
 
     const { disabled, onPress, bgColor, opacity, children, style, size, round, shadowless, shadowColor, iconSize, onlyIcon,
         darkColor, ...otherProps } = props

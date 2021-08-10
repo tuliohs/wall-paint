@@ -1,10 +1,10 @@
 import React, { Component, PropTypes, useEffect } from 'react';
 import {
     Dimensions,
-    PanResponder,
+    PanResponder, Button,
     View, Text, FlatList
 } from 'react-native';
-import Button from '../components/Button'
+import CustomButton from './CustomButton'
 import { transformOrigin, rotateXY, rotateXZ } from '../utils';
 
 import Animated, {
@@ -12,7 +12,7 @@ import Animated, {
     useSharedValue, useAnimatedStyle,
     interpolate, useAnimatedRef
 } from 'react-native-reanimated'
-import { colors } from '../constants/theme';
+import { colors } from '../constants/theme/index';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -217,7 +217,7 @@ export default function Cubo() {
                 keyExtractor={(item) => item.title}
                 renderItem={({ item }) => (
                     <View key={item?.title}>
-                        <Button round
+                        <CustomButton round
                             size="small"
                             bgColor={colors.warning}
 
@@ -225,9 +225,12 @@ export default function Cubo() {
                             <Text style={{
                                 color: colors.white
                             }}>{item.title}</Text>
-                        </Button>
+                        </CustomButton>
                     </View>)}
             />
+
+
+
         </View>
     )
 }

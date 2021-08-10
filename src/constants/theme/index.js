@@ -13,5 +13,5 @@ export const colors = {
     disable: '#8898aa',
 
     text: '#32325d',
-    background: '#282C34',
+    background: '#ffffff',// '#282C34',
 }
