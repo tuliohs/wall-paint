@@ -14,7 +14,7 @@ import Animated, {
     useSharedValue, useAnimatedStyle,
     interpolate, useAnimatedRef
 } from 'react-native-reanimated'
-import { colors } from "../contants/theme";
+import { colors } from "../constants/theme";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 

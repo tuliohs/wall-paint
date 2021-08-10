@@ -1,24 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, SafeAreaProvider } from 'react-native';
 import Cubo from './src/components/Cubo';
-import HorizontallScroll from './src/components/HorizontalScroll';
+import WallContext from './src/constants/data/WallContext';
+import Navigation from './src/navigation'
+import AppStack from './src/navigation/stacks/AppStack';
 
 export default function App() {
+  const [loading, setLoading] = useState(false)
   return (
-    <View >
-      <Cubo />
-      {/*<HorizontallScroll />*/}
-      <StatusBar style="auto" />
-    </View>
-  );
+    <WallContext.Provider value={{ loading, setLoading }}>
+      <Navigation />
+      {/*< Loader loading={loading} message={messageLoading} />*/}
+    </WallContext.Provider>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    //flex: 1,
+    //backgroundColor: '#fff',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
 });
