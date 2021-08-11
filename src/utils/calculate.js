@@ -25,9 +25,9 @@ export const calculaQuantidadeTinta = (tamanho) => {
         latas3_5: latas3_5,
         latas2_5: latas2_5,
         latas0_5: latas0_5,
-        toString: "18 L->" + latas18 +
-            "   3,5 L ->" + latas3_5 +
-            "   2,5 L ->" + latas2_5 +
-            "   0,5 L ->" + latas0_5
+        toString: "18 L ➡️" + latas18 +
+            "   3,5 L ➡️" + latas3_5 +
+            "   2,5 L ➡️" + latas2_5 +
+            "   0,5 L ➡️" + latas0_5
     }
 }

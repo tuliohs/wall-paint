@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { colors } from '../constants/theme/index';
 import sides from '../constants/config/sides';
+import { sizes } from '../constants/theme/layout';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -26,7 +27,7 @@ const styles = {
         //position: 'absolute',
         zIndex: 9999999,
         left: WIDTH / 2 - 50,
-        top: HEIGHT / 2 - 300,
+        top: HEIGHT / 2 - 220,
         width: 100,
         height: 100,
         backgroundColor: "transparent"
@@ -247,41 +248,56 @@ export default function Cubo({ tamanho, setTamanho, itemSelect, setItemSelect })
     }
 
     const walls = [
-        { id: sides.left, title: "Left", onPress: () => goToPositionLeft(sides.left) },
-        { id: sides.front, title: "Front", onPress: () => goToPositionFront(sides.front) },
-        { id: sides.right, title: "Right", onPress: () => goToPositionRight(sides.right) },
-        { id: sides.back, title: "Back", onPress: () => goToPositionBack(sides.back) },
+        { id: sides.left, title: "Esquerda", onPress: () => goToPositionLeft(sides.left) },
+        { id: sides.front, title: "Frente", onPress: () => goToPositionFront(sides.front) },
+        { id: sides.right, title: "Direita", onPress: () => goToPositionRight(sides.right) },
+        { id: sides.back, title: "Fundo", onPress: () => goToPositionBack(sides.back) },
     ]
     return (
         <View style={{
             position: 'relative',
         }}>
             <Animated.View style={styles.container}>
-                <RenderFront color='#4c72e0' />
-                <RenderBack color='#8697df' />
-                <RenderLeft color='#d1426b' />
-                <RenderRight color='#e5afb9' />
+                <RenderFront color='#00a591' />
+                <RenderBack color='#122b73' />
+                <RenderLeft color='#005b96' />
+                <RenderRight color='#2c5394' />
                 {/*{this.renderTop('#de7c92')}*/}
                 {/*{this.renderBottom('#d1426b')}*/}
             </Animated.View>
             <FlatList
-
                 style={{
                     position: 'absolute',
-                    marginTop: HEIGHT / 2 - 80
+                    marginTop: HEIGHT / 2 - 340,
+
+                    backgroundColor: colors.background,
+                    borderWidth: sizes.INPUT_BORDER_WIDTH,
+                    borderColor: colors.input
                 }}
                 data={walls} horizontal={true}
                 keyExtractor={(item) => item.title}
                 renderItem={({ item }) => (
-                    <View key={item?.title}>
-                        <CustomButton round border
+                    <View key={item?.title}
+                        style={
+                            itemSelect === item?.id && {
+
+                                backgroundColor: colors.background,
+                                borderBottomWidth: sizes.INPUT_BORDER_WIDTH + 3,
+                                borderColor: '#00a591'
+                            }}
+                    >
+                        <CustomButton round //border
                             active={itemSelect === item?.id}
                             size="small"
-                            bgColor={'#1e1e1e'}
+                            bgColor={'#ffffff'}
                             onPress={item.onPress}>
-                            <Text style={{
-                                color: itemSelect !== item?.id ? colors.white : colors.text
-                            }}>{item.title}</Text>
+                            <Text style={[
+                                itemSelect === item?.id && { fontWeight: "bold" },
+                                {
+                                    fontSize: 20,
+
+                                    color: itemSelect !== item?.id ? '#1e1e1e' : '#00a591'
+                                }]}>{item.title}</Text>
                         </CustomButton>
                     </View>)}
             />

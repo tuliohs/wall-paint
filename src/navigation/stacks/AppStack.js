@@ -9,7 +9,19 @@ export default function AppStack() {
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{ headerTitle: "Wall Paint", headerMode: "screen" }}
+        options={{
+          headerTintColor: '#ffffff',
+          headerStyle: {
+            backgroundColor: '#00a591',
+          },
+          headerTitleStyle: {
+            alignSelf: 'center',
+            //fontWeight: 'bold',
+            fontSize: 25,
+          },
+          headerTitleAlign: 'center',
+          headerTitle: "Wall Paint", headerMode: "screen"
+        }}
       />
     </Stack.Navigator>
   );

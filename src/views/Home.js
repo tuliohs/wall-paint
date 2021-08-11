@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Cubo from '../components/Cubo'
 import CustomInput from '../components/CustomInput'
 import CustomView from '../components/CustomView'
@@ -14,6 +14,7 @@ import { colors } from '../constants/theme'
 import sides from '../constants/config/sides'
 import CustomButton from '../components/CustomButton'
 import { calculaQuantidadeTinta } from '../utils/calculate'
+import { sizes } from '../constants/theme/layout'
 const { height, width } = Dimensions.get('screen');
 
 const DismissKeyboard = ({ children }) => (
@@ -29,6 +30,29 @@ const Home = () => {
     })
 
     const [itemSelect, setItemSelect] = useState(sides.front)
+
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
     const onChangeHeight = (e) => {
         //if (e > 15 || e < 15) 
         //Alert.alert("Erro", "A parede deve ter entre 1 e 15 Metros")
@@ -70,8 +94,9 @@ const Home = () => {
                             <CustomView space="between" middle
                                 style={{
                                     width: width,
+
                                     //position: 'absolute',
-                                    marginTop: height / 2 - 120
+                                    marginTop: height / 2 - 126
                                 }}
                             >
                                 <CustomView middle center  >
@@ -91,7 +116,13 @@ const Home = () => {
                                             error={false}
                                         />
                                     </CustomView>
-                                    <CustomView row style={stylesSheet.borderTop}           >
+                                    <CustomView row style={[stylesSheet.borderTop,
+                                    {
+                                        //backgroundColor: colors.background,
+                                        borderBottomWidth: sizes.INPUT_BORDER_WIDTH,
+                                        borderBottomColor: colors.input
+                                    }
+                                    ]}           >
                                         <Text style={stylesSheet.label} >{strings.txLargura}</Text>
                                         <CustomInput
                                             placeholder={strings.phLargura}
@@ -106,7 +137,30 @@ const Home = () => {
                                             error={false}
                                         />
                                     </CustomView>
-
+                                    <CustomButton
+                                        border
+                                        round
+                                        bgColor={colors.primary}
+                                        style={{
+                                            marginTop: 20,
+                                            width: width * 0.8,
+                                            backgroundColor: '#2c5394'
+                                        }}
+                                    //onPress={handlerPress}
+                                    //style={[styles.createButton,
+                                    //    //{ opacity: btActive ? 1 : 0.5 }
+                                    //]}
+                                    //{...rest}
+                                    >
+                                        <Text
+                                            style={{ //fontFamily: 'montserrat-bold'
+                                                color: colors.white,
+                                                fontSize: 16
+                                            }}
+                                        >
+                                            {" ➕      Porta ou Janela"}
+                                        </Text>
+                                    </CustomButton>
 
 
                                 </CustomView>
@@ -116,91 +170,96 @@ const Home = () => {
                 </ >
 
             </ScrollView>
-            <CustomView
-                style={{
-                    width: width,
-                    position: 'absolute',
-                    textAlign: 'center',
-                    bottom: 20
-                }}
-            ><Text
-                style={{
-                    fontSize: 30,
-                    textAlign: 'center'
-                }}
-            >{calculaQuantidadeTinta(tamanho).soma.toString() + " litros"}</Text>
-                <View>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            textAlign: 'center'
-                        }}
-                    >{calculaQuantidadeTinta(tamanho).toString}</Text>
-                </View>
-            </CustomView>
+            <>
+                {
+                    isKeyboardVisible ? <></> :
+                        <>
+                            {/*<CustomView
+                                style={{
+                                    width: width,
+                                    position: 'absolute',
+                                    textAlign: 'center',
+                                    bottom: 50
+                                }}
+                            ><Text
+                                style={{
+                                    fontSize: 30,
+                                    textAlign: 'center'
+                                }}
+                            >{calculaQuantidadeTinta(tamanho).soma.toString() + " litros"}</Text>
+                                <View style={{
+                                    marginTop: 20
+                                }}   >
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            textAlign: 'center'
+                                        }}
+                                    >{calculaQuantidadeTinta(tamanho).toString}</Text>
+                                </View>
+                            </CustomView>*/}
 
-            <CustomButton
-                style={{
-                    width: 65,
-                    height: 80,
-                    //borderRadius: 30,
-                    borderTopLeftRadius: 10,
-                    backgroundColor: '#EA1D2C',
-                    position: 'absolute',
-                    bottom: -5,
-                    right: -10,
-                }}
-            >
-                <Text
-                    style={{
-                        width: 65,
-                        height: 78,
-                        //borderRadius: 30,
-                        borderTopLeftRadius: 30,
-                        color: '#ffffff',
-                        position: 'absolute',
-                        bottom: -5,
-                        right: -5,
-                    }}
-                >Calcular</Text>
-                <Image source={{ uri: 'https://img.icons8.com/glyph-neue/64/ffffff/paint-bucket.png' }}
-                    onPress={() => console.log('oko')}
-                    height={40}
-                    width={40}
-                    style={{
-                        width: 40,
-                        height: 40,
-                        //borderRadius: 30,
-                        //borderTopLeftRadius: 30,
-                        //backgroundColor: '#ee6e73',
-                        //textAlign: 'center',
-                        position: 'absolute',
-                        bottom: 5,
-                        right: 12,
-                    }}
+                            <CustomButton
+                                style={{
+                                    width: 65,
+                                    height: 60,
+                                    borderTopLeftRadius: 30,
+                                    //borderRadius: 30,
+                                    //borderTopLeftRadius: 10,
+                                    backgroundColor: '#122b73',
+                                    position: 'absolute',
+                                    bottom: -10,
+                                    right: -10,
+                                }}
+                            >
+                                <Image source={{ uri: 'https://img.icons8.com/glyph-neue/64/ffffff/paint-bucket.png' }}
+                                    onPress={() => console.log('oko')}
+                                    height={40}
+                                    width={40}
+                                    style={{
+                                        width: 40,
+                                        height: 40,
+                                        position: 'absolute',
+                                        bottom: 8,
+                                        right: 8,
+                                    }}
 
-                />
-            </CustomButton>
-
+                                />
+                                {/*<Text
+                                    style={{
+                                        width: 65,
+                                        height: 30,
+                                        //borderRadius: 30,
+                                        borderTopLeftRadius: 30,
+                                        color: '#8898aa',
+                                        position: 'absolute',
+                                        bottom: -5,
+                                        right: -5,
+                                    }}
+                                >Expandir</Text>*/}
+                            </CustomButton>
+                        </>}
+            </>
         </>
     )
 }
 
 const stylesSheet = StyleSheet.create({
     label: {
-        width: width * 0.25,
+        width: width * 0.40,
         textAlign: 'right',
         marginRight: 8,
         marginTop: 12,
-        fontSize: 15,
+        fontSize: 22,
         fontWeight: "bold"
     },
     input: {
-        width: width * 0.55,
+        width: width * 0.45,
         borderColor: 'transparent',
         borderWidth: 0,
         color: "black",
-        fontSize: 15,
+        marginTop: 5,
+        fontSize: 20,
     },
     borderTop: {
         borderColor: "#D3D3D3",
